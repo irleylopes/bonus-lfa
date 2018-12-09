@@ -65,45 +65,51 @@ public class Normalizacao {
 
         List<Producao> producoeList = new ArrayList<>();
         producoeList.addAll(producoes);
+        this.gramatica.setProducoes(producoeList);
+        ordenarProducoes(this.gramatica.getProducoes());
+    }
 
-        Collections.sort(producoeList, new Comparator<Producao>() {
+    public void producoesUnitarias() {
+        /**
+         * procura quais producoes tem uma variavel unitaria
+         */
+        List<Producao> prod = new ArrayList<>();
+        for(String variavel : this.gramatica.getVariaveis()) {
+            for (Producao producao : this.gramatica.getProducoes()) {
+                if (producao.getProducao().length() == 1 && producao.getProducao().contains(variavel)) {
+                    prod.add(producao);
+                }
+            }
+        }
+
+        /**
+         * removendo producoes que tem uma variavel unitaria
+         */
+        for(Producao p : prod) {
+            this.gramatica.getProducoes().remove(p);
+        }
+
+        Set<Producao> novasProducoes = new HashSet<>();
+        for(Producao p : prod) {
+            List<Producao> producoes = this.gramatica.getProducoes(p.getProducao());
+            for(Producao nova : producoes) {
+                novasProducoes.add(new Producao(p.getVariavel(),nova.getProducao()));
+            }
+        }
+
+        this.gramatica.getProducoes().addAll(novasProducoes);
+        ordenarProducoes(this.gramatica.getProducoes());
+    }
+
+    private void ordenarProducoes(List<Producao> listaProducoes) {
+
+        Collections.sort(listaProducoes, new Comparator<Producao>() {
             @Override
             public int compare(Producao o1, Producao o2) {
                 return o1.getVariavel().compareTo(o2.getVariavel());
             }
         });
-        this.gramatica.setProducoes(producoeList);
     }
-//
-//    public void producoesUnitarias() {
-//        /**
-//         * procura quais producoes tem uma variavel unitaria
-//         */
-//        List<Producao> prod = new ArrayList<>();
-//        for(String variavel : this.gramatica.getVariaveis()) {
-//            for (Producao producao : this.gramatica.getProducoes()) {
-//                if (producao.getProducao().length() == 1 && producao.getProducao().contains(variavel)) {
-//                    prod.add(producao);
-//                }
-//            }
-//        }
-//
-//        /**
-//         * removendo producoes que tem uma variavel unitaria
-//         */
-//        for(Producao p : prod) {
-//            this.gramatica.getProducoes().remove(p);
-//        }
-//        for(Producao p : prod) {
-//            List<Producao> novasProducoes = this.gramatica.getProducoes(p.getProducao());
-//            for(Producao nova : novasProducoes) {
-//                this.gramatica.getProducoes().add(new Producao(p.getVariavel(),nova.getProducao()));
-//            }
-//
-//        }
-//    }
-//
-//
 
 
 }

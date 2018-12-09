@@ -40,15 +40,15 @@ public class Gramatica {
         return producoes;
     }
 
-//    public List<Producao> getProducoes(String variavel) {
-//        List<Producao> producaoList = new ArrayList<>();
-//        for(Producao p : this.producoes) {
-//            if(p.getVariavel().contains(variavel)) {
-//                producaoList.add(p);
-//            }
-//        }
-//        return producaoList;
-//    }
+    public List<Producao> getProducoes(String variavel) {
+        List<Producao> producaoList = new ArrayList<>();
+        for(Producao p : this.producoes) {
+            if(p.getVariavel().contains(variavel)) {
+                producaoList.add(p);
+            }
+        }
+        return producaoList;
+    }
 
     public void setProducoes(List<Producao> producoes) {
         this.producoes = producoes;
