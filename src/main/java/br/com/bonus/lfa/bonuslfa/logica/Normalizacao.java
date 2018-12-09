@@ -3,8 +3,7 @@ package br.com.bonus.lfa.bonuslfa.logica;
 import br.com.bonus.lfa.bonuslfa.dominio.Gramatica;
 import br.com.bonus.lfa.bonuslfa.dominio.Producao;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Normalizacao {
 
@@ -14,18 +13,26 @@ public class Normalizacao {
         this.gramatica = gramatica;
     }
 
-    public Gramatica producoesVazias() {
+    public void producoesVazias() {
 
         /**
-         * achar qual leva aos vazios
+         * achar quais variaveis tem vazio e excluila a produção vazia
          */
-        Set<String> contemVazio = new HashSet<String>();
-        for(Producao producao : this.gramatica.getProducoes()) {
-            if(producao.getProducao().length()==0) {
-                contemVazio.add(producao.getVariavel());
+        Set<String> contemVazio = new HashSet<>();
+        Set<Integer> listaVazios = new HashSet<Integer>();
+
+        for(int i = 0; i < this.gramatica.getProducoes().size(); i++) {
+            if(this.gramatica.getProducoes().get(i).getProducao().length()==0) {
+                contemVazio.add(this.gramatica.getProducoes().get(i).getVariavel());
+                listaVazios.add(i);
+                this.gramatica.getProducoes().remove(i);
             }
+
         }
 
+        /**
+         * achar quais variaveis podem chegar ao vazio indiretamente
+         */
         if(!contemVazio.isEmpty()) {
 
             for(String vazio : contemVazio) {
@@ -38,13 +45,65 @@ public class Normalizacao {
         }
 
         /**
-         * acrescentar vazio
+         * acrescentar novas produções que substituem o vazio
          */
+        Set<Producao> producoes = new HashSet<Producao>();
+        if(!contemVazio.isEmpty()) {
 
+            for(String variavel : contemVazio) {
+                for(Producao producao : this.gramatica.getProducoes()) {
+                    producoes.add(producao);
+                    if(producao.getProducao().contains(variavel)) {
+                        String NovaProducao = producao.getProducao().replace(variavel,"");
+                        if(NovaProducao.length()>0) {
+                            producoes.add(new Producao(producao.getVariavel(), NovaProducao));
+                        }
+                    }
+                }
+            }
+        }
 
+        List<Producao> producoeList = new ArrayList<>();
+        producoeList.addAll(producoes);
 
-
-
-        return null;
+        Collections.sort(producoeList, new Comparator<Producao>() {
+            @Override
+            public int compare(Producao o1, Producao o2) {
+                return o1.getVariavel().compareTo(o2.getVariavel());
+            }
+        });
+        this.gramatica.setProducoes(producoeList);
     }
+//
+//    public void producoesUnitarias() {
+//        /**
+//         * procura quais producoes tem uma variavel unitaria
+//         */
+//        List<Producao> prod = new ArrayList<>();
+//        for(String variavel : this.gramatica.getVariaveis()) {
+//            for (Producao producao : this.gramatica.getProducoes()) {
+//                if (producao.getProducao().length() == 1 && producao.getProducao().contains(variavel)) {
+//                    prod.add(producao);
+//                }
+//            }
+//        }
+//
+//        /**
+//         * removendo producoes que tem uma variavel unitaria
+//         */
+//        for(Producao p : prod) {
+//            this.gramatica.getProducoes().remove(p);
+//        }
+//        for(Producao p : prod) {
+//            List<Producao> novasProducoes = this.gramatica.getProducoes(p.getProducao());
+//            for(Producao nova : novasProducoes) {
+//                this.gramatica.getProducoes().add(new Producao(p.getVariavel(),nova.getProducao()));
+//            }
+//
+//        }
+//    }
+//
+//
+
+
 }
