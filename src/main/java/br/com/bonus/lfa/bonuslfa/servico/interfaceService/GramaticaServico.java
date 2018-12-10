@@ -6,4 +6,6 @@ public interface GramaticaServico {
 
     Gramatica normalizacao(Gramatica gramatica);
 
+    Gramatica chomsky(Gramatica gramatica);
+
 }

@@ -25,6 +25,15 @@ public class GramaticaControlador {
             produces = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity normalizacao(@RequestBody Gramatica gramatica) {
          Gramatica gramaticaNormalizada = gramaticaServico.normalizacao(gramatica);
-        return new ResponseEntity<>(gramaticaNormalizada, HttpStatus.CREATED);
+        return new ResponseEntity<>(gramaticaNormalizada, HttpStatus.OK);
+    }
+
+    @PostMapping(
+            value = "/chomsky",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    private ResponseEntity chomsky(@RequestBody Gramatica gramatica) {
+        Gramatica gramaticaNormalizada = gramaticaServico.chomsky(gramatica);
+        return new ResponseEntity<>(gramaticaNormalizada, HttpStatus.OK);
     }
 }
