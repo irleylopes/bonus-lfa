@@ -38,7 +38,9 @@ public class Normalizacao {
             for(String vazio : contemVazio) {
                 for(Producao producao : this.gramatica.getProducoes()) {
                     if(producao.getProducao().contains(vazio)) {
-                        contemVazio.add(producao.getVariavel());
+                        if(!this.gramatica.getStart().contains(producao.getVariavel())) {
+                            contemVazio.add(producao.getVariavel());
+                        }
                     }
                 }
             }
