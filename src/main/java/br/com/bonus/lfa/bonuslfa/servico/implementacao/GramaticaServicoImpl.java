@@ -15,9 +15,7 @@ public class GramaticaServicoImpl implements GramaticaServico {
         normalizacao = new Normalizacao(gramatica);
         normalizacao.producoesVazias();
         normalizacao.producoesUnitarias();
-
+        normalizacao.variaveisInuteis();
         return gramatica;
     }
-
-
 }

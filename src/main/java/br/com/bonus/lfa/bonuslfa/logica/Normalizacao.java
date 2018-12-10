@@ -101,6 +101,46 @@ public class Normalizacao {
         ordenarProducoes(this.gramatica.getProducoes());
     }
 
+    public void variaveisInuteis() {
+        Set<String> vInuteis = new HashSet<>();
+        /**
+         * encontra variaveis inuteis
+         */
+        int contador = 0;
+        for(String variavel : this.gramatica.getVariaveis()) {
+            if(!this.gramatica.getStart().contains(variavel)) {
+                for (Producao producao : this.gramatica.getProducoes()) {
+                    if (producao.getProducao().contains(variavel)) {
+                        contador ++;
+                        break;
+                    }
+                }
+                if(contador==0) {
+                    vInuteis.add(variavel);
+                }
+                contador = 0;
+            }
+        }
+
+        /**
+         * exclui variaveis e producoes inuteis
+         */
+        for(String variavelInutil : vInuteis) {
+            for(int i = this.gramatica.getProducoes().size()-1; i>=0; i--) {
+                if(this.gramatica.getProducoes().get(i).getVariavel().contains(variavelInutil)) {
+                    this.gramatica.getProducoes().remove(i);
+                }
+            }
+
+            for(int i = this.gramatica.getVariaveis().size()-1; i>=0; i--) {
+                if(this.gramatica.getVariaveis().get(i).contains(variavelInutil)) {
+                    this.gramatica.getVariaveis().remove(i);
+                }
+            }
+
+        }
+    }
+
     private void ordenarProducoes(List<Producao> listaProducoes) {
 
         Collections.sort(listaProducoes, new Comparator<Producao>() {
@@ -110,6 +150,4 @@ public class Normalizacao {
             }
         });
     }
-
-
 }
